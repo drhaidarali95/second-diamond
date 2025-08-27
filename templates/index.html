@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Second Diamond Chat</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="chat-container">  
+    <div id="messages"></div>
+    <form id="chat-form" method="post">
+      <input type="text" id="message" name="message" placeholder="Ask your question...">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  
+  <!-- ✅ Script with typing effect -->
+  <script>
+    const form = document.getElementById("chat-form");
+    const messagesDiv = document.getElementById("messages");
+    
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const input = document.getElementById("message");
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+      
+      appendMessage("You", userMessage, "user");
+      input.value = "";
+      
+      // Show typing bubble
+      const typingBubble = document.createElement("div");
+      typingBubble.classList.add("message", "bot", "typing");
+      typingBubble.innerHTML = `<strong>Bot:</strong> <span class="dots"><span>.</span><span>.</span><span>.</span></span>`;
+      messagesDiv.appendChild(typingBubble);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      
+      // Send to backend
+      const formData = new FormData();
+      formData.append("message", userMessage);
+      const response = await fetch("/chat", { method: "POST", body: formData });
+      const data = await response.json();
+      
+      // Remove typing bubble
+      messagesDiv.removeChild(typingBubble);
+      
+      // Show bot response with typing effect
+      await typeMessage("Bot", data.markdown, "bot");
+    };
+    
+    function appendMessage(sender, text, type) {
+      const message = document.createElement("div");
+      message.classList.add("message", type);
+      message.innerHTML = `<strong>${sender}:</strong> ${text}`;
+      messagesDiv.appendChild(message);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    async function typeMessage(sender, text, type) {
+      const message = document.createElement("div");
+      message.classList.add("message", type);
+      message.innerHTML = `<strong>${sender}:</strong> `;
+      const span = document.createElement("span");
+      message.appendChild(span);
+      messagesDiv.appendChild(message);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      
+      const words = text.split(" ");
+      for (let i = 0; i < words.length; i++) {
+        span.innerHTML += words[i] + " ";
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        await new Promise(r => setTimeout(r, 50)); // typing speed
+      }
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,90 @@
+/* Chat container */
+#chat-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Messages */
+#messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* User bubble */
+.message.user {
+  align-self: flex-end;
+  background: #007aff;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 18px 18px 0 18px;
+  max-width: 75%;
+  word-wrap: break-word;
+}
+
+/* Bot bubble */
+.message.bot {
+  align-self: flex-start;
+  background: #e5e5ea;
+  color: black;
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 0;
+  max-width: 75%;
+  word-wrap: break-word;
+}
+
+/* Typing bubble */
+.message.typing {
+  background: #e5e5ea;
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 0;
+  max-width: 60px;
+}
+
+.dots span {
+  display: inline-block;
+  animation: blink 1.4s infinite;
+}
+
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% { opacity: .2; }
+  20% { opacity: 1; }
+  100% { opacity: .2; }
+}
+
+/* Input form */
+#chat-form {
+  display: flex;
+  gap: 10px;
+}
+
+#message {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
