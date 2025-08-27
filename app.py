@@ -1,41 +1,44 @@
-import streamlit as st
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch, os
 
-# 🌌 Comet UI Setup
-st.set_page_config(page_title="☄️ Comet - Second Diamond", layout="wide")
-st.markdown("<h1 style='text-align:center;'>☄️ Comet: Second Diamond Chat</h1>", unsafe_allow_html=True)
+app = FastAPI()
 
-# Load model (tiny for free hosting — swap later for Gemma/LLaMA)
-@st.cache_resource
-def load_model():
-    model_id = "sshleifer/tiny-gpt2"  
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
-    model = AutoModelForCausalLM.from_pretrained(model_id)
-    return tokenizer, model
+# Serve static files (CSS)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-tokenizer, model = load_model()
+# Serve templates (HTML)
+templates = Jinja2Templates(directory="templates")
 
-# Conversation memory
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# 🔑 Model setup (Gemma or fallback)
+model_id = "google/gemma-2b-it"
+hf_token = os.getenv("HF_TOKEN")
 
-# Show past messages
-for msg in st.session_state.messages:
-    if msg["role"] == "user":
-        st.markdown(f"<div style='text-align:right; color:white; background:#007AFF; padding:8px; border-radius:12px; margin:4px;'>{msg['content']}</div>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<div style='text-align:left; color:black; background:#E5E5EA; padding:8px; border-radius:12px; margin:4px;'>{msg['content']}</div>", unsafe_allow_html=True)
+tokenizer = AutoTokenizer.from_pretrained(model_id, token=hf_token)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype=torch.float32,
+    device_map="cpu",
+    token=hf_token
+)
 
-# User input
-if prompt := st.chat_input("Type your message..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    st.markdown(f"<div style='text-align:right; color:white; background:#007AFF; padding:8px; border-radius:12px; margin:4px;'>{prompt}</div>", unsafe_allow_html=True)
+@app.get("/", response_class=HTMLResponse)
+async def serve_ui(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-    inputs = tokenizer(prompt, return_tensors="pt")
-    outputs = model.generate(**inputs, max_length=200)
+@app.post("/chat")
+async def chat(message: str = Form(...)):
+    inputs = tokenizer(message, return_tensors="pt")
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=300,
+            temperature=0.7,
+            do_sample=True
+        )
     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-    st.session_state.messages.append({"role": "assistant", "content": response})
-    st.markdown(f"<div style='text-align:left; color:black; background:#E5E5EA; padding:8px; border-radius:12px; margin:4px;'>{response}</div>", unsafe_allow_html=True)
+    return JSONResponse({"markdown": response})
 
