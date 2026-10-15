@@ -1,9 +1,12 @@
 # Hammurabi — delivery status
 
-Company name: Hammurabi. Repository selected by the founder: drhaidarali95/second-diamond.
+Company name: Hammurabi. Source repository: drhaidarali95/second-diamond.
 
-The pre-existing chat application is preserved. Hammurabi is added in the hammurabi/ directory on the hammurabi/foundation branch. Git read access is verified. Remote publication is reported separately after verifying push results.
+The existing application is preserved. Hammurabi lives in hammurabi/ on the hammurabi/foundation branch. Git read and write access were verified; the foundation was pushed and the remote commit matched the local commit.
 
-The foundation includes 25 profiles, charter, identity specifications and a local boardroom. No live model, production human-character assets or Zoom attendees are connected. No paid model or Lovable generation was used. The original cast concept artwork retains its generic title and is not production character artwork.
+The founder supplied the existing Lovable project:
+https://lovable.dev/projects/20c23fc4-59d2-452f-972d-6ef6e37c954c
 
-No Lovable tool is exposed in this session. No Lovable project, repository synchronization or public deployment has been created. Repository import/sync availability and credit requirements still need verification.
+No Lovable editing tool is exposed in this session. A read attempt was blocked by the environment proxy (HTTP CONNECT 403). The project's linked GitHub repository and synchronization behavior remain unverified. No Lovable scene, page or other content has been changed or deleted. No Lovable generation credits have been used. Identify the linked repository from the project's GitHub settings before preparing compatible frontend changes.
+
+The foundation includes 25 profiles, charter, identity specifications and a local boardroom. Live intelligence, production human-character assets, Zoom attendance and public deployment remain outstanding. No paid inference was used. See integrations.json for project references and verified connection state.

@@ -1,0 +1,20 @@
+{
+  "company": "Hammurabi",
+  "github": {
+    "repository": "https://github.com/drhaidarali95/second-diamond",
+    "branch": "hammurabi/foundation",
+    "source_directory": "hammurabi",
+    "git_read_write_verified": true
+  },
+  "lovable": {
+    "project_url": "https://lovable.dev/projects/20c23fc4-59d2-452f-972d-6ef6e37c954c",
+    "project_id": "20c23fc4-59d2-452f-972d-6ef6e37c954c",
+    "linked_repository": null,
+    "sync_verified": false,
+    "editor_access_verified": false
+  },
+  "constraints": {
+    "paid_generation_permitted": false,
+    "preserve_existing_project_until_inspected": true
+  }
+}
